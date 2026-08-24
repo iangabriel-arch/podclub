@@ -45,7 +45,10 @@ export function CoverArt({
   className?: string;
   children?: React.ReactNode;
 }) {
-  const hue = typeof seed === 'number' ? seed : hueFor(seed);
+  const raw = typeof seed === 'number' ? seed : hueFor(seed);
+  // Keep artwork inside a warm amber-to-bronze band so every room reads as part of
+  // the same pressing rather than a random rainbow.
+  const hue = 8 + (raw % 28);
   return (
     <div
       className={cn('cover-art relative overflow-hidden', className)}
@@ -88,7 +91,7 @@ export function UserBadge({
         className
       )}
       style={{
-        background: `linear-gradient(145deg, hsl(${h} 78% 56%), hsl(${(h + 46) % 360} 72% 40%))`,
+        background: `linear-gradient(145deg, hsl(${h} 58% 52%), hsl(${(h + 46) % 360} 52% 34%))`,
       }}
       aria-hidden="true"
     >

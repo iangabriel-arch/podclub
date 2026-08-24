@@ -58,7 +58,7 @@ export default function Landing() {
           className="pointer-events-none absolute inset-0 opacity-[0.5]"
           style={{
             background:
-              'radial-gradient(60% 55% at 18% 0%, hsl(346 92% 52% / 0.30) 0%, transparent 62%), radial-gradient(52% 50% at 88% 14%, hsl(268 82% 58% / 0.24) 0%, transparent 66%)',
+              'radial-gradient(60% 55% at 18% 0%, hsl(42 92% 52% / 0.26) 0%, transparent 62%), radial-gradient(52% 50% at 88% 14%, hsl(28 78% 44% / 0.20) 0%, transparent 66%)',
           }}
         />
         <div
@@ -198,7 +198,7 @@ export default function Landing() {
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                'radial-gradient(70% 100% at 50% 0%, hsl(346 92% 55% / 0.20) 0%, transparent 70%)',
+                'radial-gradient(70% 100% at 50% 0%, hsl(42 92% 55% / 0.18) 0%, transparent 70%)',
             }}
           />
           <div className="relative">
