@@ -6,8 +6,6 @@
  * entry only needs the JSON API. The project directory is read-only there, so the
  * SQLite file is kept in /tmp: the schema is created and seeded on cold start.
  */
-process.env.SQLITE_PATH = process.env.SQLITE_PATH || '/tmp/podclub.db';
-
 import express, { type NextFunction, type Request, type Response } from 'express';
 import { createServer } from 'node:http';
 import { registerRoutes } from './routes';
@@ -29,6 +27,11 @@ const ready = registerRoutes(createServer(app), app).then(() => {
 });
 
 export default async function handler(req: Request, res: Response) {
-  await ready;
+  try {
+    await ready;
+  } catch (err: any) {
+    console.error('API failed to start:', err);
+    return res.status(500).json({ message: `API failed to start: ${err?.message ?? err}` });
+  }
   return app(req, res);
 }

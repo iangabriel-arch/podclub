@@ -1,12 +1,11 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { PublicUser } from '@shared/schema';
 import { apiRequest, queryClient, setActiveUserId } from './queryClient';
 
 type AuthValue = {
   user: PublicUser | null;
   isAdmin: boolean;
-  /** Sessions live in memory only (storage APIs are blocked in the preview
-   *  iframe), so there is never an async restore to wait on. */
+  /** True while a stored session is being restored on first paint. */
   isLoading: boolean;
   login: (username: string, password: string) => Promise<PublicUser>;
   register: (input: { username: string; displayName: string; password: string }) => Promise<PublicUser>;
@@ -15,13 +14,69 @@ type AuthValue = {
 
 const AuthContext = createContext<AuthValue | null>(null);
 
+const STORAGE_KEY = 'podclub.userId';
+
+/**
+ * Storage APIs throw in sandboxed iframes (the in-thread preview runs on an opaque
+ * origin), so every access is guarded. On a real domain the session survives a
+ * reload; in the preview it falls back to memory only.
+ */
+function readStoredId(): number | null {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const id = raw === null ? NaN : Number(raw);
+    return Number.isFinite(id) ? id : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredId(id: number | null) {
+  try {
+    if (id === null) window.localStorage.removeItem(STORAGE_KEY);
+    else window.localStorage.setItem(STORAGE_KEY, String(id));
+  } catch {
+    /* preview iframe — memory only */
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<PublicUser | null>(null);
+  const [isLoading, setIsLoading] = useState(() => readStoredId() !== null);
 
   const adopt = useCallback((next: PublicUser | null) => {
     setActiveUserId(next?.id ?? null);
+    writeStoredId(next?.id ?? null);
     setUser(next);
     queryClient.clear();
+  }, []);
+
+  // Restore a stored session once, on mount.
+  useEffect(() => {
+    const storedId = readStoredId();
+    if (storedId === null) return;
+
+    let cancelled = false;
+    setActiveUserId(storedId);
+
+    apiRequest('GET', '/api/auth/me')
+      .then((res) => res.json() as Promise<PublicUser>)
+      .then((restored) => {
+        if (cancelled) return;
+        setUser(restored);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setActiveUserId(null);
+        writeStoredId(null);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const login = useCallback(
@@ -53,8 +108,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(() => adopt(null), [adopt]);
 
   const value = useMemo<AuthValue>(
-    () => ({ user, isAdmin: user?.role === 'admin', isLoading: false, login, register, logout }),
-    [user, login, register, logout]
+    () => ({ user, isAdmin: user?.role === 'admin', isLoading, login, register, logout }),
+    [user, isLoading, login, register, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

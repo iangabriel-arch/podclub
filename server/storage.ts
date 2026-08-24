@@ -21,7 +21,8 @@ import { eq, and, desc, asc, sql, inArray } from 'drizzle-orm';
  * (Vercel) the project directory is read-only, so SQLITE_PATH points at /tmp and
  * the instance builds and seeds its own copy on cold start.
  */
-const dbPath = process.env.SQLITE_PATH || 'data.db';
+const dbPath =
+  process.env.SQLITE_PATH || (process.env.VERCEL ? '/tmp/podclub.db' : 'data.db');
 
 const sqlite = new Database(dbPath);
 sqlite.pragma('journal_mode = WAL');
