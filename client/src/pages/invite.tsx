@@ -72,7 +72,7 @@ export default function InvitePage() {
             </div>
           ) : (
             <div className="overflow-hidden rounded-2xl border border-card-border bg-card sheen">
-              <CoverArt seed={channel.hue} className="aspect-[16/9]">
+              <CoverArt seed={channel.hue} topic={channel.topic} className="aspect-[16/9]">
                 <div className="absolute inset-x-0 bottom-0 p-5">
                   <span className="rounded-full bg-black/35 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/90 backdrop-blur-sm">
                     {channel.topic}

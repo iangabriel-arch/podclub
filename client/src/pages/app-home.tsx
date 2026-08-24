@@ -188,7 +188,7 @@ export function ChannelCard({
       data-testid={`card-channel-${channel.id}`}
     >
       <Link href={`/channels/${channel.id}`} className="block">
-        <CoverArt seed={channel.hue} className="aspect-[16/10]">
+        <CoverArt seed={channel.hue} topic={channel.topic} className="aspect-[16/10]">
           <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4">
             <span className="rounded-full bg-black/35 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/90 backdrop-blur-sm">
               {channel.topic}

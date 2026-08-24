@@ -121,7 +121,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         active && 'bg-sidebar-accent'
                       )}
                     >
-                      <CoverArt seed={channel.hue} className="h-9 w-9 shrink-0 rounded-md" />
+                      <CoverArt seed={channel.hue} topic={channel.topic} thumb className="h-9 w-9 shrink-0 rounded-md" />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-medium">{channel.name}</span>
                         <span className="block truncate text-xs text-muted-foreground">

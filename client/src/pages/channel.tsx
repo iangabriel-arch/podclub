@@ -193,7 +193,7 @@ export default function ChannelPage() {
       <div className="flex min-w-0 flex-1 flex-col">
         {/* -------------------------------- header ------------------------------- */}
         <header className="flex shrink-0 items-center gap-3 border-b border-border px-4 py-3 sm:gap-4 sm:px-5">
-          <CoverArt seed={channel.hue} className="h-11 w-11 shrink-0 rounded-lg" />
+          <CoverArt seed={channel.hue} topic={channel.topic} thumb className="h-11 w-11 shrink-0 rounded-lg" />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <h1 className="truncate text-base font-bold" data-testid="text-channel-title">
@@ -281,7 +281,7 @@ export default function ChannelPage() {
           <div className="mx-auto max-w-3xl px-5 py-6">
             {/* room intro */}
             <div className="mb-8">
-              <CoverArt seed={channel.hue} className="h-16 w-16 rounded-xl" />
+              <CoverArt seed={channel.hue} topic={channel.topic} className="h-16 w-16 rounded-xl" />
               <h2 className="mt-4 text-xl font-extrabold tracking-tight">{channel.name}</h2>
               <p className="mt-2 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground">
                 {channel.description || 'No description yet.'}

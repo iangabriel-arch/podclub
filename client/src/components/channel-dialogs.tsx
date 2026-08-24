@@ -98,7 +98,7 @@ export function CreateChannelDialog({
         </DialogHeader>
 
         <div className="flex items-center gap-4 rounded-lg border border-card-border bg-card p-4">
-          <CoverArt seed={`${name}${topic}`} className="h-16 w-16 shrink-0 rounded-lg" />
+          <CoverArt seed={`${name}${topic}`} topic={topic} className="h-16 w-16 shrink-0 rounded-lg" />
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold">{name || 'Untitled room'}</p>
             <p className="text-xs text-muted-foreground">{topic}</p>

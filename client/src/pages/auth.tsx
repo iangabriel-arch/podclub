@@ -98,7 +98,7 @@ export default function AuthPage() {
     <div className="flex min-h-screen bg-background">
       {/* ------------------------------ visual side ------------------------------ */}
       <aside className="relative hidden w-[46%] shrink-0 overflow-hidden border-r border-border lg:block">
-        <CoverArt seed={332} className="absolute inset-0" />
+        <CoverArt seed={332} image="auth-room.webp" scrim="strong" className="absolute inset-0" />
         <div className="relative flex h-full flex-col justify-between p-12">
           <Wordmark className="text-white" />
           <div className="max-w-sm">

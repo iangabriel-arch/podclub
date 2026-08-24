@@ -264,7 +264,7 @@ export default function AdminPage() {
                     className="flex flex-wrap items-center gap-4 rounded-xl border border-card-border bg-card p-4 sheen"
                     data-testid={`admin-channel-${channel.id}`}
                   >
-                    <CoverArt seed={channel.hue} className="h-12 w-12 shrink-0 rounded-lg" />
+                    <CoverArt seed={channel.hue} topic={channel.topic} thumb className="h-12 w-12 shrink-0 rounded-lg" />
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <Link

@@ -52,7 +52,22 @@ export default function Landing() {
 
       {/* --------------------------------- hero --------------------------------- */}
       <section className="relative overflow-hidden border-b border-border">
-        {/* atmosphere: two soft light sources, no image needed */}
+        {/* the room itself, sitting behind the type — weighted to the right so the
+            headline stays on clean black */}
+        <img
+          src="/covers/landing-hero.webp"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right opacity-70"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,hsl(240_8%_4%/0.97)_0%,hsl(240_8%_4%/0.88)_38%,hsl(240_8%_4%/0.55)_100%)]"
+        />
+        {/* narrow screens have no empty column to hide the photo in, so lift the scrim */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-background/45 md:hidden" />
+        {/* atmosphere: two soft light sources over the photograph */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-[0.5]"
@@ -140,7 +155,7 @@ export default function Landing() {
                   style={{ animationDelay: `${i * 60}ms` }}
                   data-testid={`card-featured-${channel.id}`}
                 >
-                  <CoverArt seed={channel.hue} className="aspect-[16/9]">
+                  <CoverArt seed={channel.hue} topic={channel.topic} className="aspect-[16/9]">
                     <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4">
                       <span className="rounded-full bg-black/35 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/90 backdrop-blur-sm">
                         {channel.topic}

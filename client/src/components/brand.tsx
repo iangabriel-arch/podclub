@@ -32,29 +32,84 @@ export function Wordmark({ className, markClass }: { className?: string; markCla
 
 /* ------------------------------- cover art -------------------------------- */
 
+/** Topics with commissioned artwork in /covers. Anything else falls back to the gradient. */
+const COVER_SLUGS = new Set([
+  'music',
+  'podcasts',
+  'hip-hop',
+  'afrobeats',
+  'jazz',
+  'electronic',
+  'rock',
+  'amapiano',
+  'classical',
+  'true-crime',
+  'tech-talk',
+  'lo-fi',
+]);
+
+function coverSlug(topic?: string | null) {
+  if (!topic) return null;
+  const slug = topic.trim().toLowerCase().replace(/\s+/g, '-');
+  return COVER_SLUGS.has(slug) ? slug : null;
+}
+
 /**
- * Generative channel artwork. The hue is derived from the channel name so the
- * same room always looks the same, without shipping a single image file.
+ * Channel artwork. Every topic has a photographic cover shot in the same dark,
+ * amber-lit treatment; the generative gradient stays underneath as the backdrop
+ * for unknown topics and while the image is still loading. `thumb` swaps in a 96px
+ * asset for the sidebar and list rows so small rows do not pull the full image.
  */
 export function CoverArt({
   seed,
+  topic,
+  thumb = false,
+  image,
+  scrim = 'auto',
   className,
   children,
 }: {
   seed: string | number;
+  topic?: string | null;
+  thumb?: boolean;
+  /** Explicit asset under /covers, used for the panels that are not channel artwork. */
+  image?: string;
+  /** `auto` darkens the bottom only when there is content sitting on the art. */
+  scrim?: 'auto' | 'strong';
   className?: string;
   children?: React.ReactNode;
 }) {
   const raw = typeof seed === 'number' ? seed : hueFor(seed);
-  // Keep artwork inside a warm amber-to-bronze band so every room reads as part of
-  // the same pressing rather than a random rainbow.
+  // Keep the fallback gradient inside a warm amber-to-bronze band so every room reads
+  // as part of the same pressing rather than a random rainbow.
   const hue = 8 + (raw % 28);
+  const slug = coverSlug(topic);
+  const src = image ?? (slug ? `${slug}${thumb ? '-sm' : ''}.webp` : null);
   return (
     <div
       className={cn('cover-art relative overflow-hidden', className)}
       style={{ ['--art-h' as string]: hue }}
     >
+      {src && (
+        <img
+          src={`/covers/${src}`}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
       <div className="absolute inset-0 bg-[radial-gradient(120%_100%_at_50%_0%,transparent_35%,rgba(0,0,0,0.55)_100%)]" />
+      {/* Keep anything laid over the artwork legible without flattening the photo. */}
+      {scrim === 'strong' ? (
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/60" />
+      ) : (
+        children && (
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/75 to-transparent" />
+        )
+      )}
       {children}
     </div>
   );
