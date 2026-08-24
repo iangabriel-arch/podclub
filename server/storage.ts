@@ -11,12 +11,21 @@ import type {
   Report,
   ReportWithContext,
 } from '@shared/schema';
+import { DDL } from './ddl';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 import Database from 'better-sqlite3';
 import { eq, and, desc, asc, sql, inArray } from 'drizzle-orm';
 
-const sqlite = new Database('data.db');
+/**
+ * Where the SQLite file lives. Locally this is ./data.db. On a serverless host
+ * (Vercel) the project directory is read-only, so SQLITE_PATH points at /tmp and
+ * the instance builds and seeds its own copy on cold start.
+ */
+const dbPath = process.env.SQLITE_PATH || 'data.db';
+
+const sqlite = new Database(dbPath);
 sqlite.pragma('journal_mode = WAL');
+sqlite.exec(DDL);
 
 export const db = drizzle(sqlite);
 

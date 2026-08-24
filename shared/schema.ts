@@ -13,7 +13,7 @@ export const users = sqliteTable("users", {
   banned: integer("banned").notNull().default(0),
   banReason: text("ban_reason"),
   bio: text("bio").notNull().default(""),
-  hue: integer("hue").notNull().default(346),
+  hue: integer("hue").notNull().default(24),
   createdAt: integer("created_at").notNull(),
 });
 
@@ -52,7 +52,7 @@ export const channels = sqliteTable("channels", {
   topic: text("topic").notNull().default("Music"),
   ownerId: integer("owner_id").notNull(),
   inviteCode: text("invite_code").notNull().unique(),
-  hue: integer("hue").notNull().default(346),
+  hue: integer("hue").notNull().default(24),
   createdAt: integer("created_at").notNull(),
 });
 
